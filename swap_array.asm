@@ -142,6 +142,7 @@ checkArrays_loop:
         beq $t3, $zero, checkArrays_exit
 
         lw $t4, 0($t0)
+	li $t2 44
         lw $t5, 0($t1)
         bne $t4, $t5, checkArrays_nonequal
         addiu $t0, $t0, 4
@@ -177,7 +178,7 @@ main:
         # Perform check on array
         jal checkArrays
         beq $v0, $zero, main_failed
-        j main_exit
+        #j main_exit
         
 main_failed:
         la $a0, incorrect
@@ -186,6 +187,8 @@ main_failed:
         
 main_exit:      
 	# TODO: Write code to properly exit a SPIM simulation
+	li $v0 10
+	syscall
 
         
 # COPYFROMHERE - DO NOT REMOVE THIS LINE
@@ -207,8 +210,29 @@ doSwap:
         # x+=2; 
         # y-=2; 
         # }
+	la $t0 myArray
+	
+	
+	li $t1 1
+	li $t3 6
+	
+	addiu $t4 $t0 4
+	addiu $t5 $t0 44
 
         loop:
+	bgt $t1 $t3 loopexit
+	
+	lw $t6 0($t4)
+	lw $t7 0($t5)
+	
+	sw $t7 0($t4)
+	sw $t6 0($t5)
+	
+	addiu $t4 8
+	addiu $t5 -8
+	addi $t1 2
+	
+	j loop
 
         loopexit:
         # do not remove this last line
